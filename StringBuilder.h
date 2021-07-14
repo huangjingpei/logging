@@ -6,6 +6,9 @@
 #include <limits>
 #include <utility>
 
+namespace tuya {
+
+
 template <typename T, size_t N>
 char (&ArraySizeHelper(T (&array)[N]))[N];
 #define arraysize(array) (sizeof(ArraySizeHelper(array)))
@@ -179,5 +182,6 @@ class StringBuilder {
  private:
   std::string str_;
 };
+} // namespace tuya
 
 #endif

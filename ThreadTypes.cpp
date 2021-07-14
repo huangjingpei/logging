@@ -17,6 +17,13 @@
 
 #if defined(WIN)
 #include "rtc_base/arraysize.h"
+#endif
+
+
+namespace tuya {
+
+#if defined(WIN)
+
 
 // The SetThreadDescription API was brought in version 1607 of Windows 10.
 // For compatibility with various versions of winuser and avoid clashing with
@@ -111,3 +118,4 @@ void SetCurrentThreadName(const char* name) {
 #endif
 }
 
+} // namespace tuya

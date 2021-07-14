@@ -59,6 +59,7 @@ static const int kMaxLogLineSize = 1024 - 60;
 #include <vector>
 
 #include "StringBuilder.h"
+namespace tuya {
 
 // By default, release builds don't log, debug builds at info level
 #if !defined(NDEBUG)
@@ -420,6 +421,7 @@ int64_t LogMessage::SystemTimeMillis() {
 
 int64_t LogMessage::SystemTimeNanos() {
   int64_t ticks;
+
 #if defined(__ANDROID__) || defined(__APPLE__) || defined(__POSIX__)
   struct timeval tm;
   // TODO(deadbeef): Do we need to handle the case when CLOCK_MONOTONIC is not
@@ -544,6 +546,7 @@ void Log(const LogArgType* fmt, ...) {
 }
 
 
+} // namespace tuya
 
 
 

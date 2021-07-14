@@ -14,7 +14,7 @@ public:
 };
 
 
-class ASink : public LogSink {
+class ASink : public tuya::LogSink {
 public:
 	  void OnLogMessage(const std::string& message) override {
 		  printf("ONLOG ==>%s", message.c_str());
@@ -25,11 +25,11 @@ public:
 
 int main(void) {
 	ASink sink;
-	LogMessage::LogThreads(true);
-	LogMessage::LogTimestamps(true);
-	LogMessage::SetLogToStderr(false);
-	LogMessage::LogToDebug(LoggingSeverity::LS_VERBOSE);
-	LogMessage::AddLogToStream(&sink, LoggingSeverity::LS_VERBOSE);
+	tuya::LogMessage::LogThreads(true);
+	tuya::LogMessage::LogTimestamps(true);
+	tuya::LogMessage::SetLogToStderr(false);
+	tuya::LogMessage::LogToDebug(tuya::LoggingSeverity::LS_VERBOSE);
+	tuya::LogMessage::AddLogToStream(&sink, tuya::LoggingSeverity::LS_VERBOSE);
 	int val = 100;
 	char* ptr = (char*)malloc(10);
 	memset(ptr, 'c', 10);

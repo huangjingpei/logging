@@ -14,6 +14,8 @@
 
 #include <cstdio>
 #include <cstring>
+namespace tuya {
+
 
 StringBuilder& StringBuilder::AppendFormat(const char* fmt, ...) {
   va_list args, copy;
@@ -32,3 +34,4 @@ StringBuilder& StringBuilder::AppendFormat(const char* fmt, ...) {
   return *this;
 }
 
+} // namespace tuya

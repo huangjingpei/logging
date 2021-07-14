@@ -23,6 +23,7 @@
 #define LOG_IS_ON 0
 #endif
 
+namespace tuya {
 
 enum LoggingSeverity {
   LS_VERBOSE,
@@ -64,7 +65,7 @@ class LogSink {
   virtual void OnLogMessage(const std::string& message) = 0;
 
  private:
-  friend class ::LogMessage;
+  friend class LogMessage;
   // Members for LogMessage class to keep linked list of the registered sinks.
   LogSink* next_ = nullptr;
   LoggingSeverity min_severity_;
@@ -275,30 +276,31 @@ class LogMessage {
   LogMessage(const LogMessage&) = delete;
   LogMessage& operator=(const LogMessage&) = delete;
 };
+
+#ifndef __ANDROID__
+#define LOGV if (LOG_IS_ON && (tuya::LoggingSeverity::LS_VERBOSE <= tuya::LogMessage::GetMinLogSeverity())) \
+		tuya::LogMessage(__FILE__, __LINE__, tuya::LoggingSeverity::LS_VERBOSE).stream()
+#define LOGI if (LOG_IS_ON && (tuya::LoggingSeverity::LS_INFO <= tuya::LogMessage::GetMinLogSeverity())) \
+		tuya::LogMessage(__FILE__, __LINE__, tuya::LoggingSeverity::LS_INFO).stream()
+#define LOGW if (LOG_IS_ON && (tuya::LoggingSeverity::LS_WARNING <= tuya::LogMessage::GetMinLogSeverity())) \
+		tuya::LogMessage(__FILE__, __LINE__, tuya::LoggingSeverity::LS_WARNING).stream()
+#define LOGE if (LOG_IS_ON) tuya::LogMessage(__FILE__, __LINE__, tuya::LoggingSeverity::LS_ERROR).stream()
+#define LOGS if (LOG_IS_ON) tuya::LogMessage(__FILE__, __LINE__, tuya::LoggingSeverity::LS_ERROR, tuya::LogErrorContext::ERRCTX_ERRNO, errno).stream()
+#else
+#define LOGV if (LOG_IS_ON && (tuya::LoggingSeverity::LS_VERBOSE <= tuya::LogMessage::GetMinLogSeverity())) \
+		tuya::LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_VERBOSE, "Native").stream()
+#define LOGI if (LOG_IS_ON && (tuya::LoggingSeverity::LS_INFO <= tuya::LogMessage::GetMinLogSeverity())) \
+		tuya::LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_INFO, "Native").stream()
+#define LOGW if (LOG_IS_ON && (tuya::LoggingSeverity::LS_WARNING <= tuya::LogMessage::GetMinLogSeverity())) \
+		tuya::LogMessage(__FILE__, __LINE__, tuya::LoggingSeverity::LS_WARNING, "Native").stream()
+#define LOGE if (LOG_IS_ON) tuya::LogMessage(__FILE__, __LINE__, tuya::LoggingSeverity::LS_ERROR, "Native").stream()
+#define LOGS if (LOG_IS_ON) tuya::LogMessage(__FILE__, __LINE__, tuya::LoggingSeverity::LS_ERROR, tuya::LogErrorContext::ERRCTX_ERRNO, errno).stream()
+#endif
+
+
 #if defined(__cplusplus)
 extern "C" {
 void Log(const LogArgType* fmt, ...);
-
-
-#ifndef __ANDROID__
-#define LOGV if (LOG_IS_ON && (LoggingSeverity::LS_VERBOSE <= LogMessage::GetMinLogSeverity())) \
-		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_VERBOSE).stream()
-#define LOGI if (LOG_IS_ON && (LoggingSeverity::LS_INFO <= LogMessage::GetMinLogSeverity())) \
-		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_INFO).stream()
-#define LOGW if (LOG_IS_ON && (LoggingSeverity::LS_WARNING <= LogMessage::GetMinLogSeverity())) \
-		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_WARNING).stream()
-#define LOGE if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_ERROR).stream()
-#define LOGS if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_ERROR, LogErrorContext::ERRCTX_ERRNO, errno).stream()
-#else
-#define LOGV if (LOG_IS_ON && (LoggingSeverity::LS_VERBOSE <= LogMessage::GetMinLogSeverity())) \
-		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_VERBOSE, "Native").stream()
-#define LOGI if (LOG_IS_ON && (LoggingSeverity::LS_INFO <= LogMessage::GetMinLogSeverity())) \
-		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_INFO, "Native").stream()
-#define LOGW if (LOG_IS_ON && (LoggingSeverity::LS_WARNING <= LogMessage::GetMinLogSeverity())) \
-		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_WARNING, "Native").stream()
-#define LOGE if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_ERROR, "Native").stream()
-#define LOGS if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_ERROR, LogErrorContext::ERRCTX_ERRNO, errno).stream()
-#endif
 
 
 #endif
@@ -306,5 +308,6 @@ void Log(const LogArgType* fmt, ...);
 }
 #endif  /* end 'extern "C"' wrapper */
 
+} // namespace tuya
 
 #endif  // __LOGGING_H_
