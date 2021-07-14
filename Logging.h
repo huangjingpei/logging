@@ -243,7 +243,7 @@ class LogMessage {
 
 #if defined(__ANDROID__)
   // The default Android debug output tag.
-  const char* tag_ = "logger";
+  const char* tag_ = "Native";
 #endif
 
   // String data generated in the constructor, that should be appended to
@@ -287,10 +287,17 @@ void Log(const LogArgType* fmt, ...);
 		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_INFO).stream()
 #define LOGW if (LOG_IS_ON && (LoggingSeverity::LS_WARNING <= LogMessage::GetMinLogSeverity())) \
 		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_WARNING).stream()
-#define LOGE if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_NONE).stream()
-#define LOGS if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_NONE, LogErrorContext::ERRCTX_ERRNO, errno).stream()
+#define LOGE if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_ERROR).stream()
+#define LOGS if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_ERROR, LogErrorContext::ERRCTX_ERRNO, errno).stream()
 #else
-
+#define LOGV if (LOG_IS_ON && (LoggingSeverity::LS_VERBOSE <= LogMessage::GetMinLogSeverity())) \
+		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_VERBOSE, "Native").stream()
+#define LOGI if (LOG_IS_ON && (LoggingSeverity::LS_INFO <= LogMessage::GetMinLogSeverity())) \
+		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_INFO, "Native").stream()
+#define LOGW if (LOG_IS_ON && (LoggingSeverity::LS_WARNING <= LogMessage::GetMinLogSeverity())) \
+		LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_WARNING, "Native").stream()
+#define LOGE if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_ERROR, "Native").stream()
+#define LOGS if (LOG_IS_ON) LogMessage(__FILE__, __LINE__, LoggingSeverity::LS_ERROR, LogErrorContext::ERRCTX_ERRNO, errno).stream()
 #endif
 
 

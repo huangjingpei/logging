@@ -420,7 +420,7 @@ int64_t LogMessage::SystemTimeMillis() {
 
 int64_t LogMessage::SystemTimeNanos() {
   int64_t ticks;
-#if defined(__ANDROID__) || defined(__APPLE__)
+#if defined(__ANDROID__) || defined(__APPLE__) || defined(__POSIX__)
   struct timeval tm;
   // TODO(deadbeef): Do we need to handle the case when CLOCK_MONOTONIC is not
   // supported?
