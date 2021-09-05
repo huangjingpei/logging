@@ -26,11 +26,12 @@ public:
 
 int main(void) {
 	ASink sink;
-	utils::LogMessage::LogThreads(true);
-	utils::LogMessage::LogTimestamps(true);
+//	utils::LogMessage::LogThreads(true);
+//	utils::LogMessage::LogTimestamps(true);
 	utils::LogMessage::SetLogToStderr(false);
-	utils::LogMessage::LogToDebug(utils::LoggingSeverity::LS_VERBOSE);
+//	utils::LogMessage::LogToDebug(utils::LoggingSeverity::LS_VERBOSE);
 	utils::LogMessage::AddLogToStream(&sink, utils::LoggingSeverity::LS_VERBOSE);
+	utils::LogMessage::ConfigureLogging("tstamp thread sensitive");
 	int val = 100;
 	char* ptr = (char*)malloc(10);
 	memset(ptr, 'c', 10);

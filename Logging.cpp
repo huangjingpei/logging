@@ -33,6 +33,7 @@ static const char kLibjingle[] = "libjingle";
 #include "Logging.h"
 #include "ThreadTypes.h"
 
+
 namespace utils {
 namespace {
 static const int64_t kNumMillisecsPerSec = INT64_C(1000);
@@ -210,13 +211,17 @@ LogMessage::LogMessage(const char* file,
                        const char* module)
     : severity_(sev), tag_(kLibjingle) {
   if (timestamp_) {
-    uint32_t time = LogStartTime();
+    uint32_t msNow = LogStartTime();
+    time_t now = time(nullptr);
+    struct tm *p = localtime(&now);
+    char buffer[32] = {0};
+    snprintf(buffer, 32, "[%04d-%02d-%02d %02d:%02d:%02d.%03d]\n", p->tm_year+1900,
+    		p->tm_mon+1, p->tm_mday, p->tm_hour, p->tm_min, p->tm_sec, msNow%1000);
     // Also ensure WallClockStartTime is initialized, so that it matches
     // LogStartTime.
     WallClockStartTime();
-    print_stream_ << "[" << std::setfill('0') << std::setw(3) << (time / 1000)
-                  << ":" << std::setw(3) << (time % 1000) << std::setfill(' ')
-                  << "] ";
+
+    print_stream_ << buffer;
   }
 
   if (thread_) {
