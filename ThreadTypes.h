@@ -19,7 +19,7 @@
 #endif
 #endif
 // clang-format on
-namespace tuya {
+namespace utils {
 
 
 #if defined(WIN)
@@ -47,7 +47,7 @@ bool IsThreadRefEqual(const PlatformThreadRef& a, const PlatformThreadRef& b);
 // Sets the current thread name.
 void SetCurrentThreadName(const char* name);
 
-} // namespace tuya
+} // namespace utils
 
 
 #endif//__THREAD_TYPES_H__

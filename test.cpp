@@ -1,4 +1,5 @@
 #include "Logging.h"
+#include "string.h"
 
 class AClass {
 public:
@@ -14,7 +15,7 @@ public:
 };
 
 
-class ASink : public tuya::LogSink {
+class ASink : public utils::LogSink {
 public:
 	  void OnLogMessage(const std::string& message) override {
 		  printf("ONLOG ==>%s", message.c_str());
@@ -25,18 +26,18 @@ public:
 
 int main(void) {
 	ASink sink;
-	tuya::LogMessage::LogThreads(true);
-	tuya::LogMessage::LogTimestamps(true);
-	tuya::LogMessage::SetLogToStderr(false);
-	tuya::LogMessage::LogToDebug(tuya::LoggingSeverity::LS_VERBOSE);
-	tuya::LogMessage::AddLogToStream(&sink, tuya::LoggingSeverity::LS_VERBOSE);
+	utils::LogMessage::LogThreads(true);
+	utils::LogMessage::LogTimestamps(true);
+	utils::LogMessage::SetLogToStderr(false);
+	utils::LogMessage::LogToDebug(utils::LoggingSeverity::LS_VERBOSE);
+	utils::LogMessage::AddLogToStream(&sink, utils::LoggingSeverity::LS_VERBOSE);
 	int val = 100;
 	char* ptr = (char*)malloc(10);
 	memset(ptr, 'c', 10);
 	LOGE  << "AA" ;
 	AClass *a  = new AClass(10);
 	printf("ptr %p\n", ptr);
-	LOGV  << "AA" << " BB " << 1000 << " cc " << val << " dd " << ptr << " ee " << a << " val " << a->val();
+	LOGV << "AA" << " BB " << 1000 << " cc " << val << " dd " << ptr << " ee " << a << " val " << a->val();
 	std::string name = "黄敬佩";
 	LOGV << "name = " << name;
 
