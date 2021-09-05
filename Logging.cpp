@@ -419,7 +419,6 @@ void LogMessage::ConfigureLogging(const char* params) {
 }
 
 void LogMessage::UpdateMinLogSeverity() {
-    std::lock_guard<std::mutex> lock(g_log_crit);
   LoggingSeverity min_sev = dbg_sev_;
   for (auto& kv : streams_) {
     min_sev = std::min(dbg_sev_, kv.second);
