@@ -313,6 +313,9 @@ inline bool LogCheckLevel(LoggingSeverity sev) {
 
 #endif  // LOG
 
+void CLog(const char* file, int line, utils::LoggingSeverity serv, const char* format, ...);
+
+
 }  // namespace utils
 
 #ifndef __ANDROID__
@@ -336,5 +339,12 @@ inline bool LogCheckLevel(LoggingSeverity sev) {
 #endif
 
 
+#define CLOGV(FORMAT, ...) if (LOG_IS_ON && (utils::LoggingSeverity::LS_VERBOSE <= utils::LogMessage::GetMinLogSeverity())) \
+        CLog(__FILE__, __LINE__, utils::LoggingSeverity::LS_VERBOSE, FORMAT, ##__VA_ARGS__)
+#define CLOGI(FORMAT, ...) if (LOG_IS_ON && (utils::LoggingSeverity::LS_INFO <= utils::LogMessage::GetMinLogSeverity())) \
+        CLog(__FILE__, __LINE__, utils::LoggingSeverity::LS_INFO, FORMAT, ##__VA_ARGS__)
+#define CLOGW(FORMAT, ...) if (LOG_IS_ON && (utils::LoggingSeverity::LS_WARNING <= utils::LogMessage::GetMinLogSeverity())) \
+        CLog(__FILE__, __LINE__, utils::LoggingSeverity::LS_WARNING, FORMAT, ##__VA_ARGS__)
+#define CLOGE(FORMAT, ...) if (LOG_IS_ON) CLog(__FILE__, __LINE__, utils::LoggingSeverity::LS_ERROR, FORMAT, ##__VA_ARGS__)
 
 #endif  // __LOGGING_H__

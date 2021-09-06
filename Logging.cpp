@@ -9,6 +9,23 @@
 #undef ERROR  // wingdi.h
 #endif
 
+#if defined(WEBRTC_POSIX)
+#include <sys/time.h>
+#if defined(WEBRTC_MAC)
+#include <mach/mach_time.h>
+#endif
+#endif
+
+#if defined(WEBRTC_WIN)
+// clang-format off
+// clang formatting would put <windows.h> last,
+// which leads to compilation failure.
+#include <windows.h>
+#include <mmsystem.h>
+#include <sys/timeb.h>
+// clang-format on
+#endif
+
 #if defined(WEBRTC_MAC) && !defined(WEBRTC_IOS)
 #include <CoreServices/CoreServices.h>
 #elif defined(WEBRTC_ANDROID)
@@ -100,7 +117,7 @@ uint64_t TimeNanos() {
     // Get the timebase if this is the first time we run.
     // Recommended by Apple's QA1398.
     if (mach_timebase_info(&timebase) != KERN_SUCCESS) {
-      RTC_DCHECK(false);
+      //RTC_DCHECK(false);
     }
   }
   // Use timebase to convert absolute time tick units into nanoseconds.
@@ -639,6 +656,16 @@ void LogMultiline(LoggingSeverity level, const char* label, bool input,
   if (state) {
     state->unprintable_count_[input] = consecutive_unprintable;
   }
+}
+
+void CLog(const char* file, int line, utils::LoggingSeverity serv, const char* format, ...) {
+    char szLog[1024] = {0};
+    va_list args;
+    va_start(args, format);
+    vsnprintf(szLog, sizeof(szLog), format, args);
+    va_end(args);
+    LogMessage log(file, line, utils::LoggingSeverity::LS_INFO);
+    log.stream() << szLog;
 }
 
 //////////////////////////////////////////////////////////////////////

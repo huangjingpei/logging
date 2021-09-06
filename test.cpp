@@ -44,6 +44,11 @@ int main(void) {
 
 	errno = EAGAIN;
 	LOGS<< "system error!";
+    
+    
+        CLOGV("%s", "huangjing;");
+        CLOGV("huangjing;iis greagete..");
 
+	delete ptr;
 	return 0;
 }
